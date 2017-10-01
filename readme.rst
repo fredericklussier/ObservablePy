@@ -9,7 +9,8 @@ In development
 
 Features
 --------
-* Use decoration to set a property observable 
+* Use decoration to set a property observable as well as code
+* use decoration to set an observer as well as code
 * No external dependencies.
 * Tested on Python 3.5 and 3.6.
 
@@ -25,8 +26,10 @@ In the future, I expect to have a setup using pip.
 
 Working on (developping)
 -------------------------
-* having an option for logging.
-* Prepare a setup in pip
+* Having an option for logging.
+* When observe multiple element, knowing the element that change.
+* Add more element type than properties
+* Prepare a setup in pip.
 
 Concepts
 --------
