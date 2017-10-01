@@ -5,7 +5,7 @@ will receive changes.
 
 Status
 ------
-In development
+In development, more, the body is in the operation chamber barely alive.
 
 Features
 --------
