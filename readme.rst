@@ -12,8 +12,9 @@ In development.
 
 Features
 --------
-* Use decoration to set a property observable as well as code
-* use decoration to set an observer as well as code
+* Use decoration to set an observable element
+* Use decoration to set an observer
+* Possibilty to observer multiple observable elements or all of them
 * No external dependencies.
 * Tested on Python 3.5 and 3.6.
 
@@ -37,11 +38,9 @@ Working on (developping)
 Concepts
 --------
 * Observable: Observable implementation to a class
-* Observable Element: The property of an observable class that have the 
-@observable_property decorator is an observable property.
+* Observable Element: The property of an observable class that have the @observable_property decorator is an observable property.
 * State : All observable elements in the class. 
-* Observer : An Observer is a function that will be called, 
-when the specified observable element change.
+* Observer : An Observer is a function that will be called, when the specified observable element change.
 
 Bassically, Observable will diffuse changes to subscribe 
 observer when the property setter or deleter is executed
@@ -195,4 +194,5 @@ using code
 License
 -------
 Distributed under the MIT license: https://opensource.org/licenses/MIT
+
 Copyright (c) 2017 Frédérick Lussier (www.linkedin.com/in/frederick-lussier-757b849)
