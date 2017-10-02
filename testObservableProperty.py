@@ -77,7 +77,7 @@ class ObservableTest(unittest.TestCase):
         self.assertTrue(self.battery.isObservableElement("level"))
         self.assertTrue(self.battery.isObservableElement("plugged"))
 
-    def testObservableDecoration_UsingNotObservableElement_ShouldNotExist(self):
+    def testObservableDecoration_UsingNotObservableElement_ShouldNot(self):
         # Arrange
         # See Battery class
 

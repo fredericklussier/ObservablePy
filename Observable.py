@@ -8,13 +8,13 @@ from ObservableProperty import observable_property
 Implement the observable behaviour to a class.
 
 Observable property:
-The property of an observable class that have the 
+The property of an observable class that have the
 @observable_property decorator is an observable property.
 
 refer to ObservableProperty to set a property observable
 
 Observer:
-An Observer is a function that will be called, when the specified 
+An Observer is a function that will be called, when the specified
 observable element change.
 
 =================
@@ -57,7 +57,8 @@ class Observable():
 
     @classmethod
     def getObservableElements(cls):
-        return [p for p in dir(cls) if isinstance(getattr(cls, p), observable_property)]
+        return [p for p in dir(cls)
+            if isinstance(getattr(cls, p), observable_property)]
 
     @classmethod
     def hasObservableElements(cls):
@@ -83,7 +84,7 @@ class Observable():
             - previousState,
             - actualState
 
-        :param func call: The function to call. 
+        :param func call: The function to call.
                           When not given, decorator usage is assumed.
         :return: the function to call once state change.
         :rtype: func
@@ -110,11 +111,12 @@ class Observable():
                 def functionName(previousState, actualState):
 
                 @instance.observeState()
-                def functionName(previousState, actualState):  
-        """ 
+                def functionName(previousState, actualState):
+        """
         def _observe(call):
             if not self.__isCallableFunction(call):
-                raise TypeError('"call" parameter should be a callable function.') 
+                raise TypeError(
+                    '"call" parameter should be a callable function.')
 
             self.__addObserver("*", call)
             return call
@@ -125,17 +127,14 @@ class Observable():
             return _observe
 
     def observeElement(self, what, call=None):
-        self.observeElements(what, call)
-
-    def observeElements(self, what, call=None):
         """
-        Registers an observer function to a specific state field or 
+        Registers an observer function to a specific state field or
             list of state fields.
             The function to call should have 2 parameters:
             - previousValue,
             -actualValue
 
-        :param what: name of the state field or names of the 
+        :param what: name of the state field or names of the
                      state field to observe.
         :type what: str | array
         :param func call: The function to call. When not given, 
@@ -170,7 +169,63 @@ class Observable():
 
         def _observe(call):
             if not self.__isCallableFunction(call):
-                raise TypeError('"call" parameter must be a callable function.')
+                raise TypeError(
+                    '"call" parameter must be a callable function.')
+
+            self.__addObserver(what, call)
+
+            return call
+
+        if call is not None:
+            return _observe(call)
+        else:
+            return _observe
+
+    def observeElements(self, what, call=None):
+        """
+        Registers an observer function to a specific state field or
+            list of state fields.
+            The function to call should have 2 parameters:
+            - previousValue,
+            -actualValue
+
+        :param what: name of the state field or names of the
+                     state field to observe.
+        :type what: str | array
+        :param func call: The function to call. When not given, 
+                          decorator usage is assumed.
+        :return: the function to call once state change.
+        :rtype: func
+        :raises TypeError: if the called function is not callable
+
+        =================
+        How to use it
+        =================
+        -----------------
+        1. Calling the function
+        -----------------
+        .. code-block:: python
+            instance.observeFields("FieldName", functionName)
+            instance.observeFields(["FieldName1","FieldName2"], functionName)
+
+            ...
+            def functionName(previousState, actualState):
+
+        -----------------
+        2. Using Decoration
+        -----------------
+        .. code-block:: python
+            @instance.observeFields("FieldName")
+            def functionName(previousValue, actualValue):
+
+            @instance.observeFields(["FieldName1","FieldName2"])
+            def functionName(previousValue, actualValue): 
+        """
+
+        def _observe(call):
+            if not self.__isCallableFunction(call):
+                raise TypeError(
+                    '"call" parameter must be a callable function.')
 
             self.__addObserver(what, call)
 

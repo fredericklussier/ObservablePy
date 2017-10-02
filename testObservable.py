@@ -109,20 +109,20 @@ class ObservableTest(unittest.TestCase):
     observeElements
     """
 
-    def testobserveElements_ShouldAppendObserver(self):
+    def testobserveElement_ShouldAppendObserver(self):
         # Arrange
             # Battery class, plus
         def voltagehandle():
             print("voltageChange")
 
         # Action
-        self.battery.observeElements("voltage", voltagehandle)
+        self.battery.observeElement("voltage", voltagehandle)
 
         # Assert
         self.assertEqual(self.battery.getObservers(), [
                          {"fields": "voltage", "call": voltagehandle}])
 
-    def testobserveElements_WhenUsingDecorator_ShouldAppendObserver(self):
+    def testObserveElement_WhenUsingDecorator_ShouldAppendObserver(self):
         # Arrange
         # Battery class
 
@@ -135,7 +135,7 @@ class ObservableTest(unittest.TestCase):
         self.assertEqual(self.battery.getObservers(), [
                          {"fields": "voltage", "call": voltagehandle}])
 
-    def testobserveElements_WhenUsingDecoratorAndArray_ShouldAppendObserver(self):
+    def testObserveElements_WhenDecoratorAndArray_ShouldAppendObserver(self):
         # Arrange
             # Battery class
 
@@ -159,7 +159,7 @@ class ObservableTest(unittest.TestCase):
             # Error weight does not exist in state
             self.battery.observeElements("weight", voltagehandle)
 
-    def testObserve_WhenObserveNoneExistingFieldInArray_ShouldRaiseValueError(self):
+    def testObserve_WhenNotExistInObserverArray_ShouldRaiseValueError(self):
         # Arrange
             # Battery class, plus
         def voltagehandle():
