@@ -2,7 +2,7 @@ ObservablePy
 ================
 .. image:: https://travis-ci.org/fredericklussier/ObservablePy.svg?branch=master
     :target: https://travis-ci.org/fredericklussier/ObservablePy
-.. image:: https://img.shields.io/pypi/l/ObservablePy.svg?maxAge=2592000
+    .. image:: https://img.shields.io/pypi/l/ObservablePy.svg?maxAge=2592000
 
 Enable an observable behavior to property, so subscribed observers
 will receive changes.  
