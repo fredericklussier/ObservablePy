@@ -192,3 +192,7 @@ using code
     
     self.battery.observeState(changeStatehandle)
 
+License
+-------
+Distributed under the MIT license: https://opensource.org/licenses/MIT
+Copyright (c) 2017 Frédérick Lussier (www.linkedin.com/in/frederick-lussier-757b849)
