@@ -1,6 +1,8 @@
 ObservablePy
 ================
-[![Build Status](https://travis-ci.org/andela-cnnadi/ObservablePy.svg?branch=master)](https://travis-ci.org/andela-cnnadi/ObservablePy)
+.. image:: https://travis-ci.org/fredericklussier/ObservablePy.svg?branch=master
+    :target: https://travis-ci.org/fredericklussier/ObservablePy
+    
 Enable an observable behavior to property, so subscribed observers
 will receive changes.  
 
