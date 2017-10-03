@@ -112,10 +112,10 @@ class ObservableTest(unittest.TestCase):
         # Battery class, plus
         def changeStatehandle():
             print("voltageChange")
-        print("ok")
+
         # Action and assert
         with self.assertRaises(TypeError):
-            print("will do")
+    
             # Error call should be a function not a string
             self.battery.observeState("changeStatehandle")
 
