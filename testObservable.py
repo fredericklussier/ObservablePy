@@ -28,7 +28,7 @@ class Battery(Observable):
 
     @voltage.deleter
     def voltage(self):
-        self.__voltage = 0
+        self.__voltage = None
 
     @observable_property
     def level(self):
@@ -94,22 +94,36 @@ class ObservableTest(unittest.TestCase):
         self.assertEqual(self.battery.getObservers(), [
             {"fields": "*", "call": changeStatehandle}])
 
-    def observeState_WhenObserveLinkToBadFunction_ShouldRaiseValueError(self):
+    def testObserveState_UsingDecorator_ShouldAppendObserver(self):
+        # Arrange
+        # Battery class, plus
+
+        # Action
+        @self.battery.observeState()
+        def changeStatehandle():
+            print("voltageChange")
+
+        # Assert
+        self.assertEqual(self.battery.getObservers(), [
+            {"fields": "*", "call": changeStatehandle}])
+
+    def testObserveState_WhenObserveLinkToBadFunction_ShouldRaiseValueError(self):
         # Arrange
         # Battery class, plus
         def changeStatehandle():
             print("voltageChange")
-
+        print("ok")
         # Action and assert
         with self.assertRaises(TypeError):
+            print("will do")
             # Error call should be a function not a string
             self.battery.observeState("changeStatehandle")
 
     """
-    observeElements
+    observeElement
     """
 
-    def testobserveElement_ShouldAppendObserver(self):
+    def testObserveElement_ShouldAppendObserver(self):
         # Arrange
             # Battery class, plus
         def voltagehandle():
@@ -122,7 +136,7 @@ class ObservableTest(unittest.TestCase):
         self.assertEqual(self.battery.getObservers(), [
                          {"fields": "voltage", "call": voltagehandle}])
 
-    def testObserveElement_WhenUsingDecorator_ShouldAppendObserver(self):
+    def testObserveElement_UsingDecorator_ShouldAppendObserver(self):
         # Arrange
         # Battery class
 
@@ -135,9 +149,35 @@ class ObservableTest(unittest.TestCase):
         self.assertEqual(self.battery.getObservers(), [
                          {"fields": "voltage", "call": voltagehandle}])
 
-    def testObserveElements_WhenDecoratorAndArray_ShouldAppendObserver(self):
+    def testObserveElement_WhenObserveNoneExistingField_ShouldRaiseValueError(self):
         # Arrange
-            # Battery class
+        # Battery class, plus
+        def voltagehandle():
+            print("voltageChange")
+
+        # Action and assert
+        with self.assertRaises(ValueError):
+            # Error weight is not an observable element
+            self.battery.observeElements("weight", voltagehandle)
+
+    def testObserveElement_WhenObserveLinkToBadFunction_ShouldRaiseValueError(self):
+            # Arrange
+            # Battery class, plus
+        def voltagehandle():
+            print("voltageChange")
+
+        # Action and assert
+        with self.assertRaises(TypeError):
+            # Error call should be a function not a string
+            self.battery.observeElement("voltage", "voltagehandle")
+
+    """
+    observeElements
+    """
+
+    def testObserveElements_ShouldAppendObserver(self):
+        # Arrange
+        # Battery class
 
         # Action
         @self.battery.observeElements(["voltage", "level"])
@@ -148,7 +188,21 @@ class ObservableTest(unittest.TestCase):
         self.assertEqual(self.battery.getObservers(), [
             {"fields": ["voltage", "level"], "call": voltagehandle}])
 
-    def testObserve_WhenObserveNoneExistingField_ShouldRaiseValueError(self):
+    def testObserveElements_UsingDecorator_ShouldAppendObserver(self):
+        # Arrange
+            # Battery class
+
+        # Action
+        def voltagehandle():
+            print("voltageChange")
+
+        self.battery.observeElements(["voltage", "level"], voltagehandle)
+
+        # Assert
+        self.assertEqual(self.battery.getObservers(), [
+            {"fields": ["voltage", "level"], "call": voltagehandle}])
+
+    def testObserveElements_WhenNotExistInObserverArray_ShouldRaiseValueError(self):
         # Arrange
             # Battery class, plus
         def voltagehandle():
@@ -156,21 +210,10 @@ class ObservableTest(unittest.TestCase):
 
         # Action and assert
         with self.assertRaises(ValueError):
-            # Error weight does not exist in state
-            self.battery.observeElements("weight", voltagehandle)
-
-    def testObserve_WhenNotExistInObserverArray_ShouldRaiseValueError(self):
-        # Arrange
-            # Battery class, plus
-        def voltagehandle():
-            print("voltageChange")
-
-        # Action and assert
-        with self.assertRaises(ValueError):
-            # Error weight does not exist in state
+            # Error weight is not an observable element
             self.battery.observeElements(["voltage", "weight"], voltagehandle)
 
-    def testObserve_WhenObserveLinkToBadFunction_ShouldRaiseValueError(self):
+    def testObserveElements_WhenObserveLinkToBadFunction_ShouldRaiseValueError(self):
         # Arrange
             # Battery class, plus
         def voltagehandle():
@@ -239,6 +282,48 @@ class ObservableTest(unittest.TestCase):
             self.assertEqual(batteryState, {"voltage": 3392, "level": 0.0})
 
         self.battery.observeElements(["voltage", "level"], voltagehandle)
+
+        # Action
+        self.battery.voltage = 3392
+
+        # Assert
+        self.assertTrue(called)
+
+    def testDiffuse_WhenFieldsObservedDelete_ShouldEmitChanges(self):
+        # Arrange
+        # Battery class, plus
+        called = False
+
+        def voltagehandle(previousBatteryState, batteryState):
+            # Assert
+            nonlocal called
+            called = True
+            self.assertEqual(previousBatteryState, {
+                             "voltage": 0, "level": 0.0})
+            self.assertEqual(batteryState, {"voltage": None, "level": 0.0})
+
+        self.battery.observeElements(["voltage", "level"], voltagehandle)
+
+        # Action
+        del(self.battery.voltage)
+
+        # Assert
+        self.assertTrue(called)
+
+    def testDiffuse_UsinDecoratorState_ShouldEmitEvent(self):
+        # Arrange
+        # Battery class, plus
+        called = False
+
+        @self.battery.observeState()
+        def voltagehandle(previousSate, actualState):
+            # Assert
+            nonlocal called
+            called = True
+            self.assertEqual(
+                previousSate, {"voltage": 0, "level": 0.0, "plugged": 0})
+            self.assertEqual(
+                actualState, {"voltage": 3392, "level": 0.0, "plugged": 0})
 
         # Action
         self.battery.voltage = 3392

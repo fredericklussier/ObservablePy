@@ -3,6 +3,10 @@ ObservablePy
 .. image:: https://travis-ci.org/fredericklussier/ObservablePy.svg?branch=master
     :target: https://travis-ci.org/fredericklussier/ObservablePy
 
+.. image:: https://coveralls.io/repos/github/fredericklussier/ObservablePy/badge.svg?branch=master
+    :target: https://coveralls.io/github/fredericklussier/ObservablePy?branch=master
+
+
 Enable an observable behavior to property, so subscribed observers
 will receive changes.  
 
@@ -39,8 +43,8 @@ Concepts
 --------
 * Observable: Observable implementation to a class
 * Observable Element: The property of an observable class that have the @observable_property decorator is an observable property.
-* State : All observable elements in the class. 
-* Observer : An Observer is a function that will be called, when the specified observable element change.
+* State: All observable elements in the class. 
+* Observer: An Observer is a function that will be called, when the specified observable element change.
 
 Bassically, Observable will diffuse changes to subscribe 
 observer when the property setter or deleter is executed
@@ -68,7 +72,7 @@ Defining the observable class
 
     @voltage.deleter
     def voltage(self):
-        self.__voltage = 0
+        self.__voltage = None
 
 Defining an observer
 

@@ -39,7 +39,7 @@ def voltage(self, value):
 
 @voltage.deleter
 def voltage(self):
-    self.__voltage = 0
+    self.__voltage = None
 
 """
 

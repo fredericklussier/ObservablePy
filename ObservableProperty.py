@@ -61,6 +61,6 @@ class observable_property(property):
 
         :param obj: The instance that owns the property.
         """
-        previousValue = getattr(obj, self.name)()
+        previousValue = getattr(obj, self.name)
         super(observable_property, self).__delete__(obj)
         obj.diffuse(self.name, previousValue, None)
