@@ -76,6 +76,149 @@ class ObservableTest(unittest.TestCase):
 
         # Assert
         self.assertFalse(self.battery.hasObservers())
+    """
+    getObservableElements
+    """
+    def testGetObservableElements_ShouldGiveObservableElements(self):
+        # Arrange
+        # Battery class, plus
+
+        # Action
+        actualValue = self.battery.getObservableElements()
+
+        # Assert
+        self.assertEqual(actualValue, ['level', 'plugged', 'voltage'])
+
+    """
+    hasObservableElements
+    """
+    def testHasObservableElements_ShouldBeTrue(self):
+            # Arrange
+        # Battery class, plus
+
+        # Action
+        actualValue = self.battery.hasObservableElements()
+
+        # Assert
+        self.assertTrue(actualValue)
+
+    """
+    isObservableElement
+    """
+    def testIsObservableElement_ShouldBeTrue(self):
+            # Arrange
+        # Battery class, plus
+
+        # Action
+        actualValue = self.battery.isObservableElement("voltage")
+
+        # Assert
+        self.assertTrue(actualValue)
+
+    def testIsObservableElement_UsingArray_ShouldBeTrue(self):
+            # Arrange
+        # Battery class, plus
+
+        # Action
+        actualValue = self.battery.isObservableElement(["voltage", "level"])
+
+        # Assert
+        self.assertTrue(actualValue)
+
+    def testIsObservableElement_UsingState_ShouldBeTrue(self):
+            # Arrange
+        # Battery class, plus
+
+        # Action
+        actualValue = self.battery.isObservableElement("*")
+
+        # Assert
+        self.assertTrue(actualValue)
+
+    def testIsObservableElement_UsingArrayAndNotObsElement_ShouldBeFalse(self):
+            # Arrange
+        # Battery class, plus
+
+        # Action
+        actualValue = self.battery.isObservableElement(["voltage", "model"])
+
+        # Assert
+        self.assertFalse(actualValue)
+
+    def testIsObservableElement_WhenNotObservableElement_ShouldBeFalse(self):
+            # Arrange
+        # Battery class, plus
+
+        # Action
+        actualValue = self.battery.isObservableElement("model")
+
+        # Assert
+        self.assertFalse(actualValue)
+
+    def testIsObservableElement_WhenBadType_ShouldRaiseError(self):
+        # Arrange
+        # Battery class, plus
+        
+        # Action and assert
+        with self.assertRaises(TypeError):
+    
+            # Error call should be a function not a string
+            self.battery.isObservableElement(10)
+
+    """
+    getObservers
+    """
+    def testGetObservers_ShouldGiveObservers(self):
+        # Arrange
+        # Battery class, plus
+        def changeStatehandle():
+            print("voltageChange")
+        
+        self.battery.observeElement("voltage", changeStatehandle)
+
+        # Action
+        actualResult = self.battery.getObservers()
+
+        # Assert
+        self.assertEqual(actualResult, [
+            {"fields": "voltage", "call": changeStatehandle}])
+
+    def testGetObservers_WhenNoOne_ShouldGiveObservers(self):
+        # Arrange
+        # Battery class
+
+        # Action
+        actualResult = self.battery.getObservers()
+
+        # Assert
+        self.assertEqual(actualResult, [])
+
+    """
+    hasObservers
+    """
+    def testHasObservers_ShouldTrue(self):
+        # Arrange
+        # Battery class, plus
+        def changeStatehandle():
+            print("voltageChange")
+
+        self.battery.observeElement("voltage", changeStatehandle)
+
+        # Action
+        actualResult = self.battery.hasObservers()
+
+        # Assert
+        self.assertTrue(actualResult)
+    
+    def testHasObservers_WheNoOne_ShouldFalse(self):
+        # Arrange
+        # Battery class
+
+        # Action
+        actualResult = self.battery.hasObservers()
+
+        # Assert
+        self.assertFalse(actualResult)
 
     """
     observeState
