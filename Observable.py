@@ -65,7 +65,7 @@ class Observable():
         :rtype: Array
         """
         return [p for p in dir(cls)
-            if isinstance(getattr(cls, p), observable_property)]
+                if isinstance(getattr(cls, p), observable_property)]
 
     @classmethod
     def hasObservableElements(cls):
@@ -78,15 +78,39 @@ class Observable():
         return cls.__ObservableElements.__len__() > 0
 
     @classmethod
-    def isObservableElement(cls, ElementName):
+    def isObservableElement(cls, ElementNames):
         """
         Mention if an element is an observable element.
 
-        :param str ElementName: the element name to evaluate
+        :param str ElementNames: the element name to evaluate
+        :ElementNames Type: (str | Array of strings)
         :return: true if is an observable element, otherwise false.
         :rtype: bool
         """
-        return ElementName in cls.__ObservableElements
+        def _evaluateString():
+            if (ElementNames in cls.__ObservableElements):
+                return True
+            return False
+
+        def _evaluateArray():
+            if set(ElementNames).issubset(cls.__ObservableElements):
+                return True
+            return False
+
+        if (ElementNames == "*"):
+            return True
+        else:
+            if (isinstance(ElementNames, str)):
+                return _evaluateString()
+
+            elif (hasattr(ElementNames, "__len__")):
+                return _evaluateArray()
+
+            else:
+                raise TypeError(
+                    "Element name should be a string of an array of string." +
+                    "I receive this {0}"
+                    .format(ElementNames))
 
     def getObservers(self):
         """
@@ -269,17 +293,8 @@ class Observable():
             return _observe
 
     def __addObserver(self, what, call):
-        def _isObservable(fields):
-            if (fields != "*"):
-                if (isinstance(fields, str)):
-                    if (not(self.isObservableElement(fields))):
-                        return False
-                elif (hasattr(fields, "__len__")):
-                    if not(set(fields).issubset(self.__ObservableElements)):
-                        return False
-            return True
 
-        if not _isObservable(what):
+        if not self.isObservableElement(what):
             msg = 'Could not find observable element named "{0}" in {1}'
             raise ValueError(msg.format(what, self.__class__))
 
