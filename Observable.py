@@ -70,7 +70,7 @@ class Observable():
     @classmethod
     def hasObservableElements(cls):
         """
-        Mention if class has observable element. 
+        Mention if class has observable element.
 
         :return: true if have observable element, otherwise false.
         :rtype: bool
@@ -78,18 +78,19 @@ class Observable():
         return cls.__ObservableElements.__len__() > 0
 
     @classmethod
-    def isObservableElement(cls, observableElement):
+    def isObservableElement(cls, ElementName):
         """
-        Mention if an element is an observable element. 
+        Mention if an element is an observable element.
 
-        :return: true if is observable element, otherwise false.
+        :param str ElementName: the element name to evaluate
+        :return: true if is an observable element, otherwise false.
         :rtype: bool
         """
         return observableElement in cls.__ObservableElements
 
     def getObservers(self):
         """
-        Get the list of observer to this class. 
+        Get the list of observer to the instance of the class.
 
         :return: Subscribed Obversers.
         :rtype: Array

@@ -61,6 +61,7 @@ Defining the observable class
     def __init__(self):
         super().__init__()
         self.__voltage = 0
+        self.__level = 0.0
 
     @observable_property
     def voltage(self):
@@ -73,6 +74,14 @@ Defining the observable class
     @voltage.deleter
     def voltage(self):
         self.__voltage = None
+
+    @observable_property
+    def level(self):
+        return self.__level
+
+    @level.setter
+    def level(self, value):
+        self.__level = value
 
 Defining an observer
 
@@ -87,8 +96,8 @@ Defining an observer
     
     self.battery.observeFields("voltage", voltagehandle)
 
-Detail
-------
+Detailled description:
+----------------------
 
 Observe one element
 ~~~~~~~~~~~~~~~~~~
@@ -157,11 +166,11 @@ using code
     def changeStatushandle(previousValue, actualValue):
         print(actualValue["voltage"], actualValue["level"])
     
-    self.battery.observeElements("voltage", "level", changeStatushandle)
+    self.battery.observeElements(["voltage", "level"], changeStatushandle)
 
 Observe state
 ~~~~~~~~~~~~~
-If you all all observable elements, just call 
+If you want to observe all observable elements.
 When one of them change, you will reveive a dict of 
 elements and value of each of them.
 
@@ -194,6 +203,94 @@ using code
         print(actualValue["voltage"], actualValue["level"])
     
     self.battery.observeState(changeStatehandle)
+
+Informationnal methods
+----------------------
+Get a list of overvable elements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+get the list of properties that have observable decoration
+
+.. code-block:: python
+
+    from Battery import Battery
+
+    self.battery = Battery()
+    print(self.battery.getObservableElements())
+
+.. code-block:: batch
+
+    ["voltage", "level"]
+
+Does the class has observable element(s)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Mention if class has observable element.
+
+.. code-block:: python
+
+    from Battery import Battery
+
+    self.battery = Battery()
+    print(self.battery.hasObservableElements())
+
+result:
+
+.. code-block:: batch
+
+    True
+
+Is this is an observable element
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Mention if an element is an observable element.
+
+* Element (str): the element name to evaluate
+
+.. code-block:: python
+
+    from Battery import Battery
+
+    self.battery = Battery()
+    print(self.battery.isObservableElement("temperature"))
+
+result:
+
+.. code-block:: batch
+
+    False
+
+Does it has observer(s)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Mention if the instance of the class has observer.
+
+.. code-block:: python
+
+    from Battery import Battery
+
+    self.battery = Battery()
+    print(self.battery.hasObservers())
+
+result:
+
+.. code-block:: batch
+
+    True
+
+Get the observer(s)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Get the list of observers ot the instance of the class.
+
+.. code-block:: python
+
+    from Battery import Battery
+
+    self.battery = Battery()
+    print(self.battery.getObservers())
+
+result:
+
+.. code-block:: batch
+
+    [{"voltage": ["changeStatehandle"]},{"level": []}]
+
 
 License
 -------
