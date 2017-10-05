@@ -86,7 +86,7 @@ class Observable():
         :return: true if is an observable element, otherwise false.
         :rtype: bool
         """
-        return observableElement in cls.__ObservableElements
+        return ElementName in cls.__ObservableElements
 
     def getObservers(self):
         """
