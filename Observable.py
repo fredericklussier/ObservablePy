@@ -47,31 +47,62 @@ def voltage(self):
 class Observable():
     # for execution speed, I store the Observable Elements as a
     #  class variable since the definition of a class is not changing.
-    # TODO: let add observable element dynamically
+    # TODO: let add or remove observable element dynamically
     __ObservableElements = {}
 
     def __init__(self):
         self.__observers = []
-        if Observable.__ObservableElements.__len__() == 0:
+        # build the list of observable element.
+        if self.hasObservableElements() == 0:
             Observable.__ObservableElements = self.getObservableElements()
 
     @classmethod
     def getObservableElements(cls):
+        """
+        get the list of properties that have observable decoration
+
+        :return: list of observable properties.
+        :rtype: Array
+        """
         return [p for p in dir(cls)
             if isinstance(getattr(cls, p), observable_property)]
 
     @classmethod
     def hasObservableElements(cls):
+        """
+        Mention if class has observable element. 
+
+        :return: true if have observable element, otherwise false.
+        :rtype: bool
+        """
         return cls.__ObservableElements.__len__() > 0
 
     @classmethod
     def isObservableElement(cls, observableElement):
+        """
+        Mention if an element is an observable element. 
+
+        :return: true if is observable element, otherwise false.
+        :rtype: bool
+        """
         return observableElement in cls.__ObservableElements
 
     def getObservers(self):
+        """
+        Get the list of observer to this class. 
+
+        :return: Subscribed Obversers.
+        :rtype: Array
+        """
         return self.__observers
 
     def hasObservers(self):
+        """
+        Mention if the observable class has observer. 
+
+        :return: true if it has observer, otherwise false.
+        :rtype: bool
+        """
         return self.getObservers().__len__() > 0
 
     # def isObserved(cls, fieldName):
