@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-import copy
+from Diffusible import Diffusible
 from ObservableProperty import observable_property
+from ObservableStore import ObservableStore
+from ObserverStore import ObserverStore
 
 """
 Implement the observable behaviour to a class.
@@ -44,73 +46,64 @@ def voltage(self):
 """
 
 
-class Observable():
-    # for execution speed, I store the Observable Elements as a
-    #  class variable since the definition of a class is not changing.
-    # TODO: let add or remove observable element dynamically
-    __ObservableElements = {}
-
+class Observable(Diffusible):
     def __init__(self):
-        self.__observers = []
+        super(Observable, self).__init__()
+        self.__observers = ObserverStore()
         # build the list of observable element.
-        if self.hasObservableElements() == 0:
-            Observable.__ObservableElements = self.getObservableElements()
+        self.__observables = ObservableStore(self.__getTaggedProperties())
 
     @classmethod
-    def getObservableElements(cls):
+    def __getTaggedProperties(cls):
+        return [p for p in dir(cls) if isinstance(
+                    getattr(cls, p), observable_property)]
+
+    def getObservableElements(self):
         """
         get the list of properties that have observable decoration
 
         :return: list of observable properties.
         :rtype: Array
         """
-        return [p for p in dir(cls)
-                if isinstance(getattr(cls, p), observable_property)]
+        return self.__observables.getObservableElements()
 
-    @classmethod
-    def hasObservableElements(cls):
+    def hasObservableElements(self):
         """
         Mention if class has observable element.
 
         :return: true if have observable element, otherwise false.
         :rtype: bool
         """
-        return cls.__ObservableElements.__len__() > 0
+        return self.__observables.hasObservableElements()
 
-    @classmethod
-    def isObservableElement(cls, ElementNames):
+    def isObservableElement(self, ElementNames):
         """
         Mention if an element is an observable element.
 
-        :param str ElementNames: the element name to evaluate
+        :param ElementNames: the element name to evaluate
         :ElementNames Type: (str | Array of strings)
         :return: true if is an observable element, otherwise false.
         :rtype: bool
         """
-        def _evaluateString():
-            if (ElementNames in cls.__ObservableElements):
-                return True
-            return False
+        return self.__observables.isObservableElement(
+            ElementNames)
 
-        def _evaluateArray():
-            if set(ElementNames).issubset(cls.__ObservableElements):
-                return True
-            return False
+    def addObservableElement(self, elementName):
+        """
+        Add an observale element.
 
-        if (ElementNames == "*"):
-            return True
-        else:
-            if (isinstance(ElementNames, str)):
-                return _evaluateString()
+        :param str elementName: the element name to add
+        :raises RuntimeError: if elementName already exist
+        """
+        self.__observables.add(elementName)
 
-            elif (hasattr(ElementNames, "__len__")):
-                return _evaluateArray()
+    def removeObservableElement(self, elementName):
+        """
+        Remove an observale element.
 
-            else:
-                raise TypeError(
-                    "Element name should be a string of an array of string." +
-                    "I receive this {0}"
-                    .format(ElementNames))
+        :param str elementName: the element name to remove
+        """
+        self.__observables.remove(elementName)
 
     def getObservers(self):
         """
@@ -119,7 +112,10 @@ class Observable():
         :return: Subscribed Obversers.
         :rtype: Array
         """
-        return self.__observers
+        return self.__observers.getObservers()
+
+    def getObserversIter(self, filter=None):
+        return self.__observers.__iter__(filter)
 
     def hasObservers(self):
         """
@@ -128,7 +124,7 @@ class Observable():
         :return: true if it has observer, otherwise false.
         :rtype: bool
         """
-        return self.getObservers().__len__() > 0
+        return self.__observers.hasObservers()
 
     # def isObserved(cls, fieldName):
     #     return true when exist other false
@@ -170,11 +166,7 @@ class Observable():
                 def functionName(previousState, actualState):
         """
         def _observe(call):
-            if not self.__isCallableFunction(call):
-                raise TypeError(
-                    '"call" parameter should be a callable function.')
-
-            self.__addObserver("*", call)
+            self.__observers.add("*", call)
             return call
 
         if call is not None:
@@ -184,58 +176,9 @@ class Observable():
 
     def observeElement(self, what, call=None):
         """
-        Registers an observer function to a specific state field or
-            list of state fields.
-            The function to call should have 2 parameters:
-            - previousValue,
-            -actualValue
-
-        :param what: name of the state field or names of the
-                     state field to observe.
-        :type what: str | array
-        :param func call: The function to call. When not given, 
-                          decorator usage is assumed.
-        :return: the function to call once state change.
-        :rtype: func
-        :raises TypeError: if the called function is not callable
-
-        =================
-        How to use it
-        =================
-        -----------------
-        1. Calling the function
-        -----------------
-        .. code-block:: python
-            instance.observeFields("FieldName", functionName)
-            instance.observeFields(["FieldName1","FieldName2"], functionName)
-
-            ...
-            def functionName(previousState, actualState):
-
-        -----------------
-        2. Using Decoration
-        -----------------
-        .. code-block:: python
-            @instance.observeFields("FieldName")
-            def functionName(previousValue, actualValue):
-
-            @instance.observeFields(["FieldName1","FieldName2"])
-            def functionName(previousValue, actualValue): 
+        Alias of observeElements method
         """
-
-        def _observe(call):
-            if not self.__isCallableFunction(call):
-                raise TypeError(
-                    '"call" parameter must be a callable function.')
-
-            self.__addObserver(what, call)
-
-            return call
-
-        if call is not None:
-            return _observe(call)
-        else:
-            return _observe
+        return self.observeElements(what, call)
 
     def observeElements(self, what, call=None):
         """
@@ -277,31 +220,18 @@ class Observable():
             @instance.observeFields(["FieldName1","FieldName2"])
             def functionName(previousValue, actualValue): 
         """
-
         def _observe(call):
-            if not self.__isCallableFunction(call):
-                raise TypeError(
-                    '"call" parameter must be a callable function.')
-
-            self.__addObserver(what, call)
-
+            self.__observers.add(what, call)
             return call
-
-        if call is not None:
-            return _observe(call)
-        else:
-            return _observe
-
-    def __addObserver(self, what, call):
 
         if not self.isObservableElement(what):
             msg = 'Could not find observable element named "{0}" in {1}'
             raise ValueError(msg.format(what, self.__class__))
 
-        self.__observers.append({"fields": what, "call": call})
-
-    def __isCallableFunction(self, function):
-        return hasattr(function, "__call__")
+        if call is not None:
+            return _observe(call)
+        else:
+            return _observe
 
     def unObserve(self, what, call):
         """
@@ -314,52 +244,4 @@ class Observable():
             - actualValue
 
         """
-        self.__observers.remove({"fields": what, "call": call})
-
-    def diffuse(self, what, previousValue, value):
-        """
-        diffuse changes to the observers
-
-        what: (string) state fields to diffuse
-
-        """
-
-        def _buildState(useField=None):
-            state = {}
-            previousState = {}
-
-            if useField is None:
-                observableElements = self.__ObservableElements
-            else:
-                observableElements = useField
-
-            for observableElement in observableElements:
-                state[observableElement] = getattr(self, observableElement)
-
-            previousState = copy.deepcopy(state)
-            previousState[what] = previousValue
-
-            return previousState, state
-
-        def _diffuse(call, field=None):
-            if (field is None):
-                previousStateValue, statevalue = _buildState()
-                call(previousStateValue, statevalue)
-            else:
-                call(previousValue, value)
-
-        def _diffuseManyFields(call, fields):
-            previousFieldsValue, fieldsValue = _buildState(fields)
-            call(previousFieldsValue, fieldsValue)
-
-        for observer in self.__observers:
-            if (observer['fields'] == "*"):
-                _diffuse(observer['call'])
-
-            elif (isinstance(observer['fields'], str)):
-                if (what == observer['fields']):
-                    _diffuse(observer['call'], observer['fields'])
-
-            else:
-                if (what in observer['fields']):
-                    _diffuseManyFields(observer['call'], observer['fields'])
+        self.__observers.remove(what, call)

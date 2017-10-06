@@ -47,7 +47,7 @@ class Battery(Observable):
         self.__plugged = value
 
 
-class ObservableTest(unittest.TestCase):
+class ObservableTests(unittest.TestCase):
 
     """
     setUp each test
@@ -76,6 +76,7 @@ class ObservableTest(unittest.TestCase):
 
         # Assert
         self.assertFalse(self.battery.hasObservers())
+
     """
     getObservableElements
     """
@@ -101,6 +102,34 @@ class ObservableTest(unittest.TestCase):
 
         # Assert
         self.assertTrue(actualValue)
+
+    """
+    addObservableElement
+    """
+    def testAddObservableElement_ShouldBeTrue(self):
+        # Arrange
+        # Battery class, plus
+        
+        # Action
+        self.battery.addObservableElement("statup")
+
+        # Assert
+        actualValue = self.battery.isObservableElement("statup")
+        self.assertTrue(actualValue)
+
+    """
+    removeObservableElement
+    """
+    def testremoveObservableElement_ShouldBeTrue(self):
+        # Arrange
+        # Battery class, plus
+        
+        # Action
+        self.battery.removeObservableElement("level")
+
+        # Assert
+        actualValue = self.battery.isObservableElement("level")
+        self.assertFalse(actualValue)
 
     """
     isObservableElement
@@ -158,10 +187,10 @@ class ObservableTest(unittest.TestCase):
     def testIsObservableElement_WhenBadType_ShouldRaiseError(self):
         # Arrange
         # Battery class, plus
-        
+
         # Action and assert
         with self.assertRaises(TypeError):
-    
+
             # Error call should be a function not a string
             self.battery.isObservableElement(10)
 
@@ -173,7 +202,7 @@ class ObservableTest(unittest.TestCase):
         # Battery class, plus
         def changeStatehandle():
             print("voltageChange")
-        
+
         self.battery.observeElement("voltage", changeStatehandle)
 
         # Action
@@ -181,7 +210,7 @@ class ObservableTest(unittest.TestCase):
 
         # Assert
         self.assertEqual(actualResult, [
-            {"fields": "voltage", "call": changeStatehandle}])
+            {"observing": "voltage", "call": changeStatehandle}])
 
     def testGetObservers_WhenNoOne_ShouldGiveObservers(self):
         # Arrange
@@ -210,7 +239,7 @@ class ObservableTest(unittest.TestCase):
         # Assert
         self.assertTrue(actualResult)
     
-    def testHasObservers_WheNoOne_ShouldFalse(self):
+    def testHasObservers_WhenNoOne_ShouldFalse(self):
         # Arrange
         # Battery class
 
@@ -235,7 +264,7 @@ class ObservableTest(unittest.TestCase):
 
         # Assert
         self.assertEqual(self.battery.getObservers(), [
-            {"fields": "*", "call": changeStatehandle}])
+            {"observing": "*", "call": changeStatehandle}])
 
     def testObserveState_UsingDecorator_ShouldAppendObserver(self):
         # Arrange
@@ -248,7 +277,7 @@ class ObservableTest(unittest.TestCase):
 
         # Assert
         self.assertEqual(self.battery.getObservers(), [
-            {"fields": "*", "call": changeStatehandle}])
+            {"observing": "*", "call": changeStatehandle}])
 
     def testObserveState_WhenObserveLinkToBadFunction_ShouldRaiseValueError(self):
         # Arrange
@@ -277,7 +306,7 @@ class ObservableTest(unittest.TestCase):
 
         # Assert
         self.assertEqual(self.battery.getObservers(), [
-                         {"fields": "voltage", "call": voltagehandle}])
+                         {"observing": "voltage", "call": voltagehandle}])
 
     def testObserveElement_UsingDecorator_ShouldAppendObserver(self):
         # Arrange
@@ -290,7 +319,7 @@ class ObservableTest(unittest.TestCase):
 
         # Assert
         self.assertEqual(self.battery.getObservers(), [
-                         {"fields": "voltage", "call": voltagehandle}])
+                         {"observing": "voltage", "call": voltagehandle}])
 
     def testObserveElement_WhenObserveNoneExistingField_ShouldRaiseValueError(self):
         # Arrange
@@ -329,7 +358,7 @@ class ObservableTest(unittest.TestCase):
 
         # Assert
         self.assertEqual(self.battery.getObservers(), [
-            {"fields": ["voltage", "level"], "call": voltagehandle}])
+            {"observing": ["voltage", "level"], "call": voltagehandle}])
 
     def testObserveElements_UsingDecorator_ShouldAppendObserver(self):
         # Arrange
@@ -343,7 +372,7 @@ class ObservableTest(unittest.TestCase):
 
         # Assert
         self.assertEqual(self.battery.getObservers(), [
-            {"fields": ["voltage", "level"], "call": voltagehandle}])
+            {"observing": ["voltage", "level"], "call": voltagehandle}])
 
     def testObserveElements_WhenNotExistInObserverArray_ShouldRaiseValueError(self):
         # Arrange
@@ -385,7 +414,7 @@ class ObservableTest(unittest.TestCase):
 
         # Assert
         self.assertEqual(self.battery.getObservers(), [
-                         {"fields": "voltage", "call": voltagehandle}])
+                         {"observing": "voltage", "call": voltagehandle}])
 
     """
     Diffuse
@@ -411,7 +440,7 @@ class ObservableTest(unittest.TestCase):
         # Assert
         self.assertTrue(called)
 
-    def testDiffuse_WhenFieldsObservedChange_ShouldEmitChanges(self):
+    def testDiffuse_WhenelementsObservedChange_ShouldEmitChanges(self):
         # Arrange
         # Battery class, plus
         called = False
@@ -432,7 +461,7 @@ class ObservableTest(unittest.TestCase):
         # Assert
         self.assertTrue(called)
 
-    def testDiffuse_WhenFieldsObservedDelete_ShouldEmitChanges(self):
+    def testDiffuse_WhenelementsObservedDelete_ShouldEmitChanges(self):
         # Arrange
         # Battery class, plus
         called = False

@@ -18,6 +18,7 @@ Features
 --------
 * Use decoration to set an observable element
 * Use decoration to set an observer
+* Add and remove observabale element dynamically
 * Possibilty to observer multiple observable elements or all of them
 * No external dependencies.
 * Tested on Python 3.5 and 3.6.
@@ -36,8 +37,8 @@ Working on (developping)
 -------------------------
 * Having an option for logging.
 * When observe multiple element, knowing the element that change.
-* Add more element type than properties
 * Prepare a setup in pip.
+* Differing changes (diffuse all changes once a job is done.)
 
 Concepts
 --------
@@ -45,6 +46,7 @@ Concepts
 * Observable Element: The property of an observable class that have the @observable_property decorator is an observable property.
 * State: All observable elements in the class. 
 * Observer: An Observer is a function that will be called, when the specified observable element change.
+* Diffusing: is the action to call all observers of a changed observable element
 
 Bassically, Observable will diffuse changes to subscribe 
 observer when the property setter or deleter is executed
@@ -203,6 +205,44 @@ using code
         print(actualValue["voltage"], actualValue["level"])
     
     self.battery.observeState(changeStatehandle)
+
+Controlling observables and diffusion
+-------------------------------------
+You can add an observable element dynamically 
+without using the properties as well as remove it. 
+And you have the control of when to diffuse changes.
+
+The way to observe them does not change.
+
+Declaring an observable elements dynamically:
+
+.. code-block:: python
+
+    class Battery(Observable):
+    def __init__(self):
+        super().__init__()
+        ...
+        self.addObservableElement("startup")
+
+    def __del__():
+        self.removeObservableElement("startup")
+
+    def startUp():
+        ...
+        self.diffuse("startup", false, true)
+
+Diffussing changes
+~~~~~~~~~~~~~~~~~~
+Diffusing is the action to diffuse the change of an observable element to its observer.
+
+* what (str): the observable element name to diffuse 
+* previousValue (any): the previous value before the observable element change
+* actualValue (any): The actual values the observable element
+
+.. code-block:: python
+
+    self.diffuse(what, previousValue, value)
+
 
 Informationnal methods
 ----------------------
