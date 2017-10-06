@@ -109,7 +109,7 @@ class ObservableTests(unittest.TestCase):
     def testAddObservableElement_ShouldBeTrue(self):
         # Arrange
         # Battery class, plus
-        
+
         # Action
         self.battery.addObservableElement("statup")
 

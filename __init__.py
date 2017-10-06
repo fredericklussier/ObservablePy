@@ -9,4 +9,4 @@ __status__ = "dev"
 __version__ = "0.1.0"
 __date__ = "august 7th 2017"
 
-__all__ = ["ObservableProperty", "ObservableNew"]
+__all__ = ["ObservableProperty", "Observable"]
