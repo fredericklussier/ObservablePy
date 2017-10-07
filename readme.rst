@@ -7,8 +7,7 @@ ObservablePy
     :target: https://coveralls.io/github/fredericklussier/ObservablePy?branch=master
 
 
-Enable an observable behavior an element, so subscribed observers
-will receive any changes.  
+Enable an observable behavior to an element, so subscribed observers will receive any changes.  
 
 Status
 ------
@@ -18,6 +17,7 @@ Features
 --------
 * Use decoration to set an observable element
 * Use decoration to set an observer
+* Actual value as weel as previous value
 * Add and remove observable element dynamically
 * Possibilty to observer multiple observable elements or all of them
 * No external dependencies.
@@ -43,13 +43,14 @@ Working on (developping)
 Concepts
 --------
 * Observable: Observable implementation to a class.
-* Observable Element: Is an element that diffuse changes to observer. It can be a property using @observable_property decorator or added using a function.
+* Observable Element: Is an element that diffuse changes to observers. It can be a property using @observable_property decorator or added using a function.
 * State: All observable elements in the class. 
 * Observer: An Observer is a function that will be called, when the specified observable element change.
-* Diffusing: is the action to call all observers of a changed observable element
+* Diffusing: is the action to call all observers of a changed observable element.
 
-Bassically, Observable will diffuse changes to subscribed 
-observer when the property setter or deleter is executed. 
+Bassically, when using property, observable will diffuse changes to subscribed observer when the property setter or deleter is executed. 
+
+When observable is not a property, you diffuse changes when you want in your flow.
 
 Usage
 -----
@@ -64,6 +65,8 @@ Defining the observable class
         super().__init__()
         self.__voltage = 0
         self.__level = 0.0
+
+        self.addObservableElement("startup")
 
     @observable_property
     def voltage(self):
@@ -84,6 +87,10 @@ Defining the observable class
     @level.setter
     def level(self, value):
         self.__level = value
+    
+    def boot(self):
+        ...
+        self.diffuse("startup", false, true)
 
 Defining an observer
 
@@ -93,10 +100,14 @@ Defining an observer
 
     self.battery = Battery()
 
-    def changeStatehandle():
-        print("voltageChange")
+    @self.battery.observeField("voltage")
+    def voltageHandle(previousValue, actualValue):
+        print("voltage is {0}".format(actualValue))
     
-    self.battery.observeFields("voltage", voltagehandle)
+    def levelHandle(previousValue, actualValue):
+        print("Power level is {0}".format(actualValue))
+
+    self.battery.observeField("level", levelHandle)
 
 Detailled description:
 ----------------------
