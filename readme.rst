@@ -7,7 +7,7 @@ ObservablePy
     :target: https://coveralls.io/github/fredericklussier/ObservablePy?branch=master
 
 
-Enable an observable behavior to an element, so subscribed observers will receive any changes.  
+Enable observable behavior to an element, so subscribed observers will receive any changes.  
 
 Status
 ------
