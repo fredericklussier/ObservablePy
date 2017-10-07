@@ -21,7 +21,7 @@ Features
 * Add and remove observable element dynamically
 * Possibilty to observer multiple observable elements or all of them
 * No external dependencies.
-* Tested on Python 3.5 and 3.6.
+* Tested on Python 3.6.
 
 Installation
 ------------
