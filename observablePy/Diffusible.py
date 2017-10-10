@@ -20,6 +20,10 @@ class Diffusible(object):
             'subclasses must override __getObserversIter()!')
 
     def diffuse(self, *args):
+        """
+        this is a dispatcher of diffuse implementation.         
+        Depending of the arguments used.
+        """
         if (isinstance(args[0], str) and (len(args) == 3)):
             self._diffuseElement(args[0], args[1], args[2])
 
