@@ -19,7 +19,20 @@ class Diffusible(object):
         raise NotImplementedError(
             'subclasses must override __getObserversIter()!')
 
-    def diffuse(self, what, previousValue, value):
+    def diffuse(self, *args):
+        if (isinstance(args[0], str) and (len(args) == 3)):
+            self._diffuseElement(args[0], args[1], args[2])
+
+        elif (hasattr(args[0], "__len__")and (len(args) == 2)):
+            self._diffuseState(args[0], args[1])
+
+        else:
+            raise TypeError(
+                "Called diffuse method using bad argments, receive this" +
+                " '{0}', but expected 'str, any, any' or 'dict, dict'."
+                .format(args))
+
+    def _diffuseElement(self, what, previousValue, value):
         """
         diffuse an element change to the observers
 
@@ -66,7 +79,7 @@ class Diffusible(object):
             else:
                 _diffuseManyFields(observer['call'], observer['observing'])
 
-    def diffuseState(self, previousState, actualState):
+    def _diffuseState(self, previousState, actualState):
         """
         diffuse state changes.
 

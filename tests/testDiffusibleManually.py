@@ -30,7 +30,7 @@ class Battery(Observable):
         self.state["level"] = voltage / 5000
         self.state["plugged"] = plugged
 
-        self.diffuseState(previousState, self.state)
+        self.diffuse(previousState, self.state)
 
 
 class testDiffusibleManuallyTests(unittest.TestCase):
@@ -140,6 +140,14 @@ class testDiffusibleManuallyTests(unittest.TestCase):
 
         # Assert
         self.assertTrue(called)
+
+    def testDiffuse_BadDiffusingArguments_ShoulRaiseError(self):
+        # Arrange
+
+        # Action + Assert
+        with self.assertRaises(TypeError):
+            # str is not callable
+            self.battery.diffuse("*")
 
 if __name__ == '__main__':
     unittest.main()
