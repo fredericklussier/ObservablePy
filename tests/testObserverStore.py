@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from ObserverStore import ObserverStore
+from observablePy.ObserverStore import ObserverStore
 
 """
 Battery is the class used for testing the observer

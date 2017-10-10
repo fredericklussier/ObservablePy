@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from Observable import Observable
-from ObservableProperty import observable_property
+from observablePy import Observable
+from observablePy import observable_property
 
 """
 Battery is the class used for testing the Observable

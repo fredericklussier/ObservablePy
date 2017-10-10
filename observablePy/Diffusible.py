@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import copy
-from ObserverStore import ObserverStore
+from .ObserverStore import ObserverStore
 
 
 class Diffusible(object):

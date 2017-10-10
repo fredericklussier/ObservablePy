@@ -63,7 +63,7 @@ class ObservableStore():
             self.__observables.append(observableElement)
         else:
             raise RuntimeError(
-                "{0} already exist has an observable element"
+                "{0} is already an observable element"
                 .format(observableElement))
 
     def remove(self, observableElement):

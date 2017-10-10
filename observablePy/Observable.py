@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from Diffusible import Diffusible
-from ObservableProperty import observable_property
-from ObservableStore import ObservableStore
-from ObserverStore import ObserverStore
+from .Diffusible import Diffusible
+from .ObservableProperty import observable_property
+from .ObservableStore import ObservableStore
+from .ObserverStore import ObserverStore
 
 """
 Implement the observable behaviour to a class.

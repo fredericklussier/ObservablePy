@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from ObservableStore import ObservableStore
+from observablePy.ObservableStore import ObservableStore
 
 
 class ObserverStoreTests(unittest.TestCase):
