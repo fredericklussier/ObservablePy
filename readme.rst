@@ -46,7 +46,7 @@ Concepts
 * Observable Element: Is an element that diffuse changes to observers. It can be a property using @observable_property decorator or added using a function.
 * State: All observable elements in the class. 
 * Observer: An Observer is a function that will be called, when the specified observable element change.
-* Diffusing: is the action to call all observers of a changed observable element.
+* Diffusing: is the action to inform all observers of the changed observable element.
 
 Bassically, when using property, observable will diffuse changes to subscribed observer when the property setter or deleter is executed. 
 
