@@ -58,7 +58,7 @@ Defining the observable class
 
 .. code-block:: python
 
-    from Observable import Observable, observable_property
+    from observablePy import Observable, observable_property
 
     class Battery(Observable):
     def __init__(self):
