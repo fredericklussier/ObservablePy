@@ -36,7 +36,7 @@ setup(
     packages=[NAME],
     version=VERSION,
     description='Enable observable behavior.',
-    long_description=read_file('readme.rst'),
+    long_description=read_file('ReadMe.rst'),
     license='MIT',
     author='Frederick Lussier',
     author_email='frederick.lussier@hotmail.com',
