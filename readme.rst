@@ -10,7 +10,10 @@ ObservablePy
     :target: https://badge.fury.io/py/observablePy
 
 Enable observable behavior to an element, so subscribed observers will receive any changes.  
-Documentation: https://github.com/fredericklussier/ObservablePy/wiki
+
+Documentation
+------
+https://github.com/fredericklussier/ObservablePy/wiki
 
 Status
 ------
