@@ -1,5 +1,8 @@
 """
 Publish a new version:
+Change version in package __init__ file
+Change version in this setup file
+Execute:
 $ git tag X.Y.Z -m "Release X.Y.Z"
 $ git push --tags
 $ pip install --upgrade twine wheel
@@ -32,12 +35,12 @@ setup(
     name=NAME,
     packages=[NAME],
     version=VERSION,
-    description='Enable observable behavior to an element, so subscribed observers will receive any changes.',
+    description='Enable observable behavior.',
     long_description=read_file('readme.rst'),
     license='MIT',
     author='Frederick Lussier',
     author_email='frederick.lussier@hotmail.com',
-    url='https://github.com/fredericklussier/ObservablePy',
+    url='https://github.com/fredericklussier/' + GITHUB_NAME,
     download_url=DOWNLOAD_URL,
     keywords=[
         'observable', 'observer', 'observer-pattern'
