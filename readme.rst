@@ -25,19 +25,17 @@ Features
 
 Installation
 ------------
-please read https://help.github.com/articles/cloning-a-repository/
 
 .. code-block:: batch
 
-    $ git clone https://github.com/fredericklussier/ObservablePy.git
+    pip install observablePy
 
-In the future, I expect to have a setup using pip.
+If you want all, please read https://help.github.com/articles/cloning-a-repository/
 
 Working on (developping)
 -------------------------
 * Having an option for logging.
 * When observe multiple element, knowing the element that change.
-* Prepare a setup in pip.
 * Differing changes (diffuse all changes once a job is done.)
 
 Concepts
