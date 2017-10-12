@@ -6,6 +6,10 @@ ObservablePy
 .. image:: https://coveralls.io/repos/github/fredericklussier/ObservablePy/badge.svg?branch=master
     :target: https://coveralls.io/github/fredericklussier/ObservablePy?branch=master
 
+.. image:: https://api.codeclimate.com/v1/badges/809cf25fc925a3ed8ef2/maintainability
+   :target: https://codeclimate.com/github/fredericklussier/ObservablePy/maintainability
+   :alt: Maintainability
+
 .. image:: https://badge.fury.io/py/observablePy.svg
     :target: https://badge.fury.io/py/observablePy
 
