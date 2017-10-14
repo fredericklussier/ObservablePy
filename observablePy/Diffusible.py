@@ -11,8 +11,8 @@ class Diffusible(object):
     __diffuseActionsMatrix = {
         diffusingModeEnum.element: {
             observerTypeEnum.element: "_diffuseElement",
-            observerTypeEnum.listOfElements: "_diffuseElements",
-            observerTypeEnum.state: "_diffuseState",
+            observerTypeEnum.listOfElements: "_diffuseElementsOrState",
+            observerTypeEnum.state: "_diffuseElementsOrState",
         },
         diffusingModeEnum.elements: {
             observerTypeEnum.element: "_diffuseElementIn",
@@ -91,8 +91,12 @@ class Diffusible(object):
     def _diffuseState(self, observer, *args):
         self._diffuseElementsOrState(observer, args[0], args[1], args[2])
 
-    def _diffuseElementsOrState(
-            self, observer, diffusingElement, previousValue, value):
+    def _diffuseElementsOrState(self, observer, *args):
+        call = observer['call']
+        diffusing = args[0]
+        previousValue = args[1]
+        value = args[2]
+
         values = {}
         if observer['observing'] == "*":
             values = self._getValues(self.getObservableElements())
@@ -100,9 +104,8 @@ class Diffusible(object):
             values = self._getValues(observer['observing'])
 
         previousValues = copy.deepcopy(values)
-        previousValues[diffusingElement] = previousValue
+        previousValues[diffusing] = previousValue
 
-        call = observer['call']
         call(previousValues, values)
 
     # TODO: get none attribute observable element
