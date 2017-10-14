@@ -34,29 +34,33 @@ class ObservableStore():
         :rtype: bool
         """
         def _evaluateString():
+            result = False
             if (ElementNames in self.__observables):
-                return True
-            return False
+                result = True
+            return result
 
         def _evaluateArray():
+            result = False
             if set(ElementNames).issubset(self.__observables):
-                return True
-            return False
+                result = True
+            return result
 
+        result = False
         if (ElementNames == "*"):
-            return True
+            result = True
         else:
             if (isinstance(ElementNames, str)):
-                return _evaluateString()
+                result = _evaluateString()
 
             elif (hasattr(ElementNames, "__len__")):
-                return _evaluateArray()
+                result = _evaluateArray()
 
             else:
                 raise TypeError(
                     "Element name should be a string of an array of string." +
                     "I receive this {0}"
                     .format(ElementNames))
+        return result
 
     def add(self, observableElement):
         if observableElement not in self.__observables:
