@@ -2,6 +2,7 @@
 Publish a new version:
 Change version in package __init__ file
 Change version in this setup file
+pull __init__ and setup
 Execute:
 $ git tag X.Y.Z -m "Release X.Y.Z"
 $ git push --tags
@@ -17,7 +18,7 @@ from setuptools import setup, find_packages
 
 NAME = 'observablePy'
 GITHUB_NAME = 'ObservablePy'
-VERSION = '0.1.0'
+VERSION = '0.2.1'
 DOWNLOAD_URL = (
     'https://github.com/fredericklussier/' + GITHUB_NAME + '/' + VERSION
 )
