@@ -24,7 +24,7 @@ class ObservableStore():
         """
         return self.__observables.__len__() > 0
 
-    def isObservableElement(self, ElementNames):
+    def isObservableElement(self, elementNames):
         """
         Mention if an element is an observable element.
 
@@ -33,31 +33,31 @@ class ObservableStore():
         :return: true if is an observable element, otherwise false.
         :rtype: bool
         """
-        def _evaluateString():
-            result = False
-            if (ElementNames in self.__observables):
-                result = True
-            return result
-
-        def _evaluateArray():
-            result = False
-            if set(ElementNames).issubset(self.__observables):
-                result = True
-            return result
-
         result = False
-        if (isinstance(ElementNames, str)):
-            result = (True if (ElementNames == "*")
-                      else _evaluateString())
+        if (isinstance(elementNames, str)):
+            result = (True if (elementNames == "*")
+                      else self._evaluateString(elementNames))
 
-        elif (hasattr(ElementNames, "__len__")):
-            result = _evaluateArray()
+        elif (hasattr(elementNames, "__len__")):
+            result = self._evaluateArray(elementNames)
 
         else:
             raise TypeError(
                 "Element name should be a string of an array of string." +
                 "I receive this {0}"
-                .format(ElementNames))
+                .format(elementNames))
+        return result
+
+    def _evaluateString(self, elementNames):
+        result = False
+        if (elementNames in self.__observables):
+            result = True
+        return result
+
+    def _evaluateArray(self, elementNames):
+        result = False
+        if set(elementNames).issubset(self.__observables):
+            result = True
         return result
 
     def add(self, observableElement):
