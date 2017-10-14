@@ -61,6 +61,12 @@ class ObservableStore():
         return result
 
     def add(self, observableElement):
+        """
+        add an observable element
+
+        :param str observableElement: the name of the observable element
+        :raises RuntimeError: if element name already exist in the store
+        """
         if observableElement not in self.__observables:
             self.__observables.append(observableElement)
         else:
@@ -69,5 +75,10 @@ class ObservableStore():
                 .format(observableElement))
 
     def remove(self, observableElement):
+        """
+        remove an obsrvable element
+
+        :param str observableElement: the name of the observable element
+        """
         if observableElement in self.__observables:
             self.__observables.remove(observableElement)

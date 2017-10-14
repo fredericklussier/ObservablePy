@@ -4,6 +4,19 @@
 from enum import Enum, unique
 
 
+"""
+    -------------------------------------------------------
+    |value               | observerTypeEnum               |
+    -------------------------------------------------------
+    | "*"                | observerTypeEnum.state         |
+    -------------------------------------------------------
+    | "whatever"         | observerTypeEnum.element       |
+    -------------------------------------------------------
+    | ["str","str", ...] | observerTypeEnum.listOfElements|
+    -------------------------------------------------------
+"""
+
+
 @unique
 class observerTypeEnum(Enum):
     unknown = 0
@@ -15,16 +28,6 @@ class observerTypeEnum(Enum):
     def typeOf(cls, what):
         """
         Return the type of the observer
-        
-        -------------------------------------------------------
-        |what value          | return value                   |
-        -------------------------------------------------------
-        | "*"                | observerTypeEnum.state         |
-        -------------------------------------------------------
-        | "whatever"         | observerTypeEnum.element       |
-        -------------------------------------------------------
-        | ["str","str", ...] | observerTypeEnum.listOfElements|
-        -------------------------------------------------------
 
         :param str|Array what: a string to evaluate
         :return: the type of the string

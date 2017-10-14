@@ -115,6 +115,14 @@ class Observable(Diffusible):
         return self.__observers.getObservers()
 
     def getObserversIterationGenerator(self, filter=None):
+        """
+        return a list of observers ready to iterate in a loop block
+
+        :param str|Array filter: element name or list of 
+                                 element name to use as filter
+        :return: a list of observers
+        :rtype: iter
+        """
         return self.__observers.iterationGenerator(filter)
 
     def hasObservers(self):
@@ -126,6 +134,7 @@ class Observable(Diffusible):
         """
         return self.__observers.hasObservers()
 
+    # TODO: mention if the element name is in observation by any observer
     # def isObserved(cls, fieldName):
     #     return true when exist other false
 
