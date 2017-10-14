@@ -76,17 +76,28 @@ class Observable(Diffusible):
         """
         return self.__observables.hasObservableElements()
 
-    def isObservableElement(self, ElementNames):
+    def areObservableElements(self, ElementNames):
+        """
+        Mention if all elements are observable elements.
+
+        :param ElementNames: a list of element names to evaluate
+        :ElementNames Type: (Array of strings)
+        :return: true if is an observable element, otherwise false.
+        :rtype: bool
+        """
+        return self.__observables.areObservableElements(
+            ElementNames)
+
+    def isObservableElement(self, ElementName):
         """
         Mention if an element is an observable element.
 
-        :param ElementNames: the element name to evaluate
-        :ElementNames Type: (str | Array of strings)
+        :param str ElementNames: the element name to evaluate
         :return: true if is an observable element, otherwise false.
         :rtype: bool
         """
         return self.__observables.isObservableElement(
-            ElementNames)
+            ElementName)
 
     def addObservableElement(self, elementName):
         """
@@ -118,7 +129,7 @@ class Observable(Diffusible):
         """
         return a list of observers ready to iterate in a loop block
 
-        :param str|Array filter: element name or list of 
+        :param str|Array filter: element name or list of
                                  element name to use as filter
         :return: a list of observers
         :rtype: iter
@@ -233,7 +244,13 @@ class Observable(Diffusible):
             self.__observers.add(what, call)
             return call
 
-        if not self.isObservableElement(what):
+        toEvaluate = []
+        if isinstance(what, str):
+            toEvaluate.append(what)
+        else:
+            toEvaluate = what
+
+        if not self.areObservableElements(toEvaluate):
             msg = 'Could not find observable element named "{0}" in {1}'
             raise ValueError(msg.format(what, self.__class__))
 

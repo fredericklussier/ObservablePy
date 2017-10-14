@@ -123,7 +123,7 @@ class ObservableTests(unittest.TestCase):
     def testremoveObservableElement_ShouldBeTrue(self):
         # Arrange
         # Battery class, plus
-        
+
         # Action
         self.battery.removeObservableElement("level")
 
@@ -149,7 +149,7 @@ class ObservableTests(unittest.TestCase):
         # Battery class, plus
 
         # Action
-        actualValue = self.battery.isObservableElement(["voltage", "level"])
+        actualValue = self.battery.areObservableElements(["voltage", "level"])
 
         # Assert
         self.assertTrue(actualValue)
@@ -169,7 +169,7 @@ class ObservableTests(unittest.TestCase):
         # Battery class, plus
 
         # Action
-        actualValue = self.battery.isObservableElement(["voltage", "model"])
+        actualValue = self.battery.areObservableElements(["voltage", "model"])
 
         # Assert
         self.assertFalse(actualValue)
@@ -238,7 +238,7 @@ class ObservableTests(unittest.TestCase):
 
         # Assert
         self.assertTrue(actualResult)
-    
+
     def testHasObservers_WhenNoOne_ShouldFalse(self):
         # Arrange
         # Battery class
@@ -287,7 +287,7 @@ class ObservableTests(unittest.TestCase):
 
         # Action and assert
         with self.assertRaises(TypeError):
-    
+
             # Error call should be a function not a string
             self.battery.observeState("changeStatehandle")
 

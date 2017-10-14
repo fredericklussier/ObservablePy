@@ -69,7 +69,7 @@ class ObserverStoreTests(unittest.TestCase):
 
     """
     remove
-    """ 
+    """
     def testRemove_ShouldRemove(self):
         # Arrange
         self.observables.add("voltage")
@@ -103,36 +103,6 @@ class ObserverStoreTests(unittest.TestCase):
         # Assert
         self.assertTrue(actualResult)
 
-    def testIsObservableElement_UsingArray_ShouldTrue(self):
-        # Arrange
-        observables = ObservableStore(["voltage", "level", "plugged"])
-
-        # Action
-        actualResult = observables.isObservableElement(["voltage", "plugged"])
-
-        # Assert
-        self.assertTrue(actualResult)
-
-    def testIsObservableElement_WhenNotExisting_ShouldFalse(self):
-        # Arrange
-        observables = ObservableStore(["voltage", "level", "plugged"])
-
-        # Action
-        actualResult = observables.isObservableElement(["model"])
-
-        # Assert
-        self.assertFalse(actualResult)
-
-    def testIsObservableElement_WhenArrayAndNotExisting_ShouldFalse(self):
-        # Arrange
-        observables = ObservableStore(["voltage", "level", "plugged"])
-
-        # Action
-        actualResult = observables.isObservableElement(["voltage", "model"])
-
-        # Assert
-        self.assertFalse(actualResult)
-
     def testIsObservableElement_WhenAll_ShouldTrue(self):
         # Arrange
         observables = ObservableStore(["voltage", "level", "plugged"])
@@ -142,7 +112,7 @@ class ObserverStoreTests(unittest.TestCase):
 
         # Assert
         self.assertTrue(actualResult)
-    
+
     def testIsObservableElement_UsingBadType_ShouldRaiseError(self):
             # Arrange
         observables = ObservableStore(["voltage", "level", "plugged"])
@@ -150,3 +120,44 @@ class ObserverStoreTests(unittest.TestCase):
         # Action and Assert
         with self.assertRaises(TypeError):
             actualResult = observables.isObservableElement(14)
+
+    """
+    areObservableElements
+    """
+    def testAreObservableElements_UsingArray_ShouldTrue(self):
+        # Arrange
+        observables = ObservableStore(["voltage", "level", "plugged"])
+
+        # Action
+        actualResult = observables.areObservableElements(["voltage", "plugged"])
+
+        # Assert
+        self.assertTrue(actualResult)
+
+    def testAreObservableElements_WhenNotExisting_ShouldFalse(self):
+        # Arrange
+        observables = ObservableStore(["voltage", "level", "plugged"])
+
+        # Action
+        actualResult = observables.areObservableElements(["model"])
+
+        # Assert
+        self.assertFalse(actualResult)
+
+    def testAreObservableElements_WhenArrayAndNotExisting_ShouldFalse(self):
+        # Arrange
+        observables = ObservableStore(["voltage", "level", "plugged"])
+
+        # Action
+        actualResult = observables.areObservableElements(["voltage", "model"])
+
+        # Assert
+        self.assertFalse(actualResult)
+
+    def testAreObservableElements_UsingBadType_ShouldRaiseError(self):
+            # Arrange
+        observables = ObservableStore(["voltage", "level", "plugged"])
+
+        # Action and Assert
+        with self.assertRaises(TypeError):
+            actualResult = observables.areObservableElements(14)

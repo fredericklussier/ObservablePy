@@ -24,29 +24,38 @@ class ObservableStore():
         """
         return self.__observables.__len__() > 0
 
-    def isObservableElement(self, elementNames):
+    def areObservableElements(self, elementNames):
         """
-        Mention if an element is an observable element.
+        Mention if all elements are observable element.
 
-        :param str ElementNames: the element name to evaluate
-        :ElementNames Type: (str | Array of strings)
+        :param str ElementName: the element name to evaluate
         :return: true if is an observable element, otherwise false.
         :rtype: bool
         """
-        result = False
-        if (isinstance(elementNames, str)):
-            result = (True if (elementNames == "*")
-                      else self._evaluateString(elementNames))
-
-        elif (hasattr(elementNames, "__len__")):
-            result = self._evaluateArray(elementNames)
-
-        else:
+        if not(hasattr(elementNames, "__len__")):
             raise TypeError(
-                "Element name should be a string of an array of string." +
+                "Element name should be a array of strings." +
                 "I receive this {0}"
                 .format(elementNames))
-        return result
+
+        return self._evaluateArray(elementNames)
+
+    def isObservableElement(self, elementName):
+        """
+        Mention if an element is an observable element.
+
+        :param str ElementName: the element name to evaluate
+        :return: true if is an observable element, otherwise false.
+        :rtype: bool
+        """
+        if not(isinstance(elementName, str)):
+            raise TypeError(
+                "Element name should be a string ." +
+                "I receive this {0}"
+                .format(elementName))
+
+        return (True if (elementName == "*")
+                else self._evaluateString(elementName))
 
     def _evaluateString(self, elementNames):
         result = False
