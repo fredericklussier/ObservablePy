@@ -46,20 +46,18 @@ class ObservableStore():
             return result
 
         result = False
-        if (ElementNames == "*"):
-            result = True
+        if (isinstance(ElementNames, str)):
+            result = (True if (ElementNames == "*")
+                      else _evaluateString())
+
+        elif (hasattr(ElementNames, "__len__")):
+            result = _evaluateArray()
+
         else:
-            if (isinstance(ElementNames, str)):
-                result = _evaluateString()
-
-            elif (hasattr(ElementNames, "__len__")):
-                result = _evaluateArray()
-
-            else:
-                raise TypeError(
-                    "Element name should be a string of an array of string." +
-                    "I receive this {0}"
-                    .format(ElementNames))
+            raise TypeError(
+                "Element name should be a string of an array of string." +
+                "I receive this {0}"
+                .format(ElementNames))
         return result
 
     def add(self, observableElement):
