@@ -13,12 +13,14 @@ class observerTypeEnum(Enum):
 
     @classmethod
     def typeOf(cls, what):
+        result = observerTypeEnum.unknown
+
         if isinstance(what, str):
-            return (observerTypeEnum.state 
-                    if (what == "*") else observerTypeEnum.element)
+            result = (observerTypeEnum.state
+                      if (what == "*")
+                      else observerTypeEnum.element)
 
         elif hasattr(what, "__len__"):
-            return observerTypeEnum.listOfElements
+            result = observerTypeEnum.listOfElements
 
-        else:
-            return observerTypeEnum.unknown
+        return result
