@@ -191,7 +191,7 @@ class Observable(Diffusible):
         :param what: name of the state field or names of the
                      state field to observe.
         :type what: str | array
-        :param func call: The function to call. When not given, 
+        :param func call: The function to call. When not given,
                           decorator usage is assumed.
         :return: the function to call once state change.
         :rtype: func
@@ -218,7 +218,7 @@ class Observable(Diffusible):
             def functionName(previousValue, actualValue):
 
             @instance.observeFields(["FieldName1","FieldName2"])
-            def functionName(previousValue, actualValue): 
+            def functionName(previousValue, actualValue):
         """
         def _observe(call):
             self.__observers.add(what, call)

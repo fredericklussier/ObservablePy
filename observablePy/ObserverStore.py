@@ -48,7 +48,7 @@ class ObserverStore():
 
     def hasObservers(self):
         """
-        Mention if the observable class has observer. 
+        Mention if the observable class has observer.
 
         :return: true if it has observer, otherwise false.
         :rtype: bool
