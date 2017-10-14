@@ -4,10 +4,6 @@
 import unittest
 from observablePy.ObserverStore import ObserverStore
 
-"""
-Battery is the class used for testing the observer
-"""
-
 
 class ObserverStoreTests(unittest.TestCase):
 
@@ -105,7 +101,7 @@ class ObserverStoreTests(unittest.TestCase):
         self.assertFalse(self.observers.hasObservers())
 
     """
-    iteration
+    iteration generator
     """
     def testIteration_ShouldIter(self):
         # Arrange
@@ -118,10 +114,13 @@ class ObserverStoreTests(unittest.TestCase):
         # Action
 
         index = 0
-        for observer in self.observers:
+        observers = self.observers.iterationGenerator()
+        for observer in observers:
             # Assert
+            observerData, observerType = observer
             self.assertEqual(
-                observer["observing"], ["voltage", "level", "plugged"][index])
+                observerData["observing"],
+                ["voltage", "level", "plugged"][index])
             index += 1
 
     def testIteration_UsingArray_ShouldIter(self):
@@ -133,7 +132,7 @@ class ObserverStoreTests(unittest.TestCase):
         self.observers.add(["level", "voltage"], changeHandle)
         self.observers.add("plugged", changeHandle)
         # Action
-        actualResult = len(list(self.observers.__iter__("voltage")))
+        actualResult = len(list(self.observers.iterationGenerator("voltage")))
 
         # Assert
         self.assertEqual(actualResult, 2)
@@ -148,7 +147,7 @@ class ObserverStoreTests(unittest.TestCase):
         self.observers.add("*", changeHandle)
         self.observers.add("plugged", changeHandle)
         # Action
-        actualResult = len(list(self.observers.__iter__("voltage")))
+        actualResult = len(list(self.observers.iterationGenerator("voltage")))
 
         # Assert
         self.assertEqual(actualResult, 3)

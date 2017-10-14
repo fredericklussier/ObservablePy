@@ -114,8 +114,8 @@ class Observable(Diffusible):
         """
         return self.__observers.getObservers()
 
-    def getObserversIter(self, filter=None):
-        return self.__observers.__iter__(filter)
+    def getObserversIterationGenerator(self, filter=None):
+        return self.__observers.iterationGenerator(filter)
 
     def hasObservers(self):
         """

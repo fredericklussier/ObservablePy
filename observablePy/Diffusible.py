@@ -2,12 +2,25 @@
 # -*- coding: utf-8 -*-
 
 import copy
-from functools import singledispatch
-import typing
 from .ObserverStore import ObserverStore
+from .ObserverTypeEnum import observerTypeEnum
+from .DiffusingModeEnum import diffusingModeEnum
 
 
 class Diffusible(object):
+    __diffuseActionsMatrix = {
+        diffusingModeEnum.element: {
+            observerTypeEnum.element: "_diffuseElement",
+            observerTypeEnum.listOfElements: "_diffuseElements",
+            observerTypeEnum.state: "_diffuseState",
+        },
+        diffusingModeEnum.elements: {
+            observerTypeEnum.element: "_diffuseElementIn",
+            observerTypeEnum.listOfElements: "_diffuseElementsIn",
+            observerTypeEnum.state: "_diffuseStateIn",
+        }
+    }
+
     def __init__(self):
         self.__observers = {}
 
@@ -15,111 +28,116 @@ class Diffusible(object):
         raise NotImplementedError(
             'subclasses must override getObservableElements()!')
 
-    def getObserversIter(self, filter=None):
+    def getObserversIterationGenerator(self, filter=None):
         raise NotImplementedError(
             'subclasses must override __getObserversIter()!')
 
     def diffuse(self, *args):
         """
-        this is a dispatcher of diffuse implementation.         
+        this is a dispatcher of diffuse implementation.
         Depending of the arguments used.
         """
-        if (isinstance(args[0], str) and (len(args) == 3)):
-            self._diffuseElement(args[0], args[1], args[2])
 
-        elif (hasattr(args[0], "__len__")and (len(args) == 2)):
-            self._diffuseState(args[0], args[1])
+        mode = diffusingModeEnum.unknown
+        if (isinstance(args[0], str) and (len(args) == 3)):
+            # reveived diffuse(str, any, any)
+            mode = diffusingModeEnum.element
+
+        elif (hasattr(args[0], "__len__") and (len(args) == 2)):
+            # reveived diffuse(dict({str: any}), dict({str: any}))
+            mode = diffusingModeEnum.elements
 
         else:
             raise TypeError(
                 "Called diffuse method using bad argments, receive this" +
-                " '{0}', but expected 'str, any, any' or 'dict, dict'."
+                " '{0}', but expected 'str, any, any' or" +
+                " 'dict(str: any), dict(str: any)'."
                 .format(args))
 
-    def _diffuseElement(self, what, previousValue, value):
-        """
-        diffuse an element change to the observers
+        self._diffuse(mode, *args)
 
-        :param str what: element name to diffuse
-        :param any previousValue: value before change of the element
-        :param any value: actual value of the element
-        """
+    def _diffuse(self, mode, *args):
+        state = None
 
-        def _buildState(elements=None):
-            state = {}
-            previousState = {}
+        # if diffusing is not None:
+        #    state = self._buildState()
 
-            if elements is None:
-                observableElements = self.getObservableElements()
-            else:
-                observableElements = elements
+        # Iteration using the diffusing element name.
+        #  When None, use all observers
+        diffusing = None
+        if mode == diffusingModeEnum.element:
+            diffusing = args[0]
 
-            for observableElement in observableElements:
-                state[observableElement] = getattr(self, observableElement)
+        observers = self.getObserversIterationGenerator(diffusing)
+        for observer in observers:
+            observerData, observerType = observer
 
-            previousState = copy.deepcopy(state)
-            previousState[what] = previousValue
+            actionName = Diffusible.__diffuseActionsMatrix[mode][observerType]
+            action = getattr(self, actionName)
 
-            return previousState, state
+            action(observerData, *args)
 
-        def _diffuse(call, element=None):
-            if (element is None):
-                previousStateValue, statevalue = _buildState()
-                call(previousStateValue, statevalue)
-            else:
-                call(previousValue, value)
+    def _diffuseElement(self, observer, *args):
+        call = observer['call']
+        diffusing = args[0]
+        previousValue = args[1]
+        value = args[2]
 
-        def _diffuseManyFields(call, elements):
-            previousValues, values = _buildState(elements)
-            call(previousValues, values)
+        call(previousValue, value)
 
-        for observer in self.getObserversIter(what):
-            if (observer['observing'] == "*"):
-                _diffuse(observer['call'])
+    def _diffuseElements(self, observer, *args):
+        self._diffuseElementsOrState(observer, args[0], args[1], args[2])
 
-            elif (isinstance(observer['observing'], str)):
-                _diffuse(observer['call'], observer['observing'])
+    def _diffuseState(self, observer, *args):
+        self._diffuseElementsOrState(observer, args[0], args[1], args[2])
 
-            else:
-                _diffuseManyFields(observer['call'], observer['observing'])
+    def _diffuseElementsOrState(
+            self, observer, diffusingElement, previousValue, value):
+        values = {}
+        if observer['observing'] == "*":
+            values = self._getValues(self.getObservableElements())
+        else:
+            values = self._getValues(observer['observing'])
 
-    def _diffuseState(self, previousState, actualState):
-        """
-        diffuse state changes.
+        previousValues = copy.deepcopy(values)
+        previousValues[diffusingElement] = previousValue
 
-        :param dict previousValue: state values before change
-        :param dict value: actual state values
-        """
+        call = observer['call']
+        call(previousValues, values)
 
-        def _buildState(elements=None):
-            if elements is None:
-                return previousState, actualState
-            else:
-                subState = {}
-                previousSubState = {}
-                for element in elements:
-                    subState[element] = actualState[element]
-                    previousSubState[element] = previousState[element]
+    # TODO: get none attribute observable element
+    def _getValues(self, observableElements):
+        values = {}
+        for observableElement in observableElements:
+            values[observableElement] = getattr(self, observableElement)
 
-                return previousSubState, subState
+        return values
 
-        def _diffuse(call, element=None):
-            if (element is None):
-                previousStateValue, stateValue = _buildState()
-                call(previousStateValue, actualState)
-            else:
-                call(previousState[element], actualState[element])
+    def _diffuseElementIn(self, observer, *args):
+        call = observer['call']
+        previousValues = args[0]
+        values = args[1]
 
-        def _diffuseManyFields(call, elements):
-            previousSubState, subState = _buildState(elements)
-            call(previousSubState, subState)
+        call(
+            previousValues[observer["observing"]],
+            values[observer["observing"]])
 
-        for observer in self.getObserversIter():
-            if (observer['observing'] == "*"):
-                _diffuse(observer['call'])
+    def _diffuseElementsIn(self, observer, *args):
+        call = observer['call']
+        previousValues = args[0]
+        values = args[1]
 
-            elif (isinstance(observer['observing'], str)):
-                _diffuse(observer['call'], observer['observing'])
+        subValues = {}
+        previousSubValues = {}
+        for element in observer["observing"]:
+            subValues[element] = values[element]
+            previousSubValues[element] = previousValues[element]
 
-            else:
-                _diffuseManyFields(observer['call'], observer['observing'])
+        call(previousSubValues, subValues)
+
+    def _diffuseStateIn(self, observer, *args):
+        call = observer['call']
+        previousValues = args[0]
+        values = args[1]
+
+        call(previousValues, values)

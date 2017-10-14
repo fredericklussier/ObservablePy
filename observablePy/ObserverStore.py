@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+from .ObserverTypeEnum import observerTypeEnum
 
 
 class ObserverStore():
@@ -54,13 +55,17 @@ class ObserverStore():
         """
         return self.__observers.__len__() > 0
 
-    def Type(self):
-        raise NotImplementedError
-
-    def __iter__(self, filter=None):
+    def iterationGenerator(self, filter=None):
         if filter is None:
-            return iter(self.__observers)
+            obsersers = self.__observers
         else:
-            return iter(
-                [o for o in self.__observers if (
-                    "*" == o["observing"] or filter in o["observing"])])
+            obsersers = self._filter(filter)
+
+        for observer in obsersers:
+            type = observerTypeEnum.typeOf(observer["observing"])
+
+            yield observer, type
+
+    def _filter(self, filter):
+        return ([o for o in self.__observers if (
+                "*" == o["observing"] or filter in o["observing"])])

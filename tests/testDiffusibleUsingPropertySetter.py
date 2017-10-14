@@ -140,9 +140,9 @@ class DiffusibleUsingPropertySetterTests(unittest.TestCase):
             nonlocal called
             called = True
             self.assertEqual(
-                previousSate, {"voltage": 0, "level": 0.0, "plugged": 0})
+                previousSate, {"level": 0.0, "plugged": False, "voltage": 0})
             self.assertEqual(
-                actualState, {"voltage": 3392, "level": 0.0, "plugged": 0})
+                actualState, {"level": 0.0, "plugged": False, "voltage": 3392})
 
         # Action
         self.battery.voltage = 3392
@@ -160,9 +160,9 @@ class DiffusibleUsingPropertySetterTests(unittest.TestCase):
             nonlocal called
             called = True
             self.assertEqual(
-                previousSate, {"voltage": 0, "level": 0.0, "plugged": 0})
+                previousSate, {"level": 0.0, "plugged": False, "voltage": 0})
             self.assertEqual(
-                actualState, {"voltage": 3392, "level": 0.0, "plugged": 0})
+                actualState, {"level": 0.0, "plugged": False, "voltage": 3392})
 
         self.battery.observeState(voltagehandle)
 
@@ -182,9 +182,9 @@ class DiffusibleUsingPropertySetterTests(unittest.TestCase):
             nonlocal called
             called = True
             self.assertEqual(
-                previousSate, {"voltage": 0, "level": 0.0, "plugged": 0})
+                previousSate, {"level": 0.0, "plugged": False, "voltage": 0})
             self.assertEqual(
-                actualState, {"voltage": 3392, "level": 0.0, "plugged": 0})
+                actualState, {"level": 0.0, "plugged": False, "voltage": 3392})
 
         self.battery.observeState(voltagehandle)
 
