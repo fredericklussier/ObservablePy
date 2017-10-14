@@ -85,12 +85,6 @@ class Diffusible(object):
 
         call(previousValue, value)
 
-    def _diffuseElements(self, observer, *args):
-        self._diffuseElementsOrState(observer, args[0], args[1], args[2])
-
-    def _diffuseState(self, observer, *args):
-        self._diffuseElementsOrState(observer, args[0], args[1], args[2])
-
     def _diffuseElementsOrState(self, observer, *args):
         call = observer['call']
         diffusing = args[0]
