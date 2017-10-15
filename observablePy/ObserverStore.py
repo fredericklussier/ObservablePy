@@ -63,7 +63,7 @@ class ObserverStore():
         for observer in self._observers:
             result.append(
                           {
-                              "observing": observer["observing"], 
+                              "observing": observer["observing"],
                               "call": observer["call"]
                           })
         return result
