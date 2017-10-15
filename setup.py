@@ -18,7 +18,7 @@ from setuptools import setup, find_packages
 
 NAME = 'observablePy'
 GITHUB_NAME = 'ObservablePy'
-VERSION = '0.2.1'
+VERSION = '0.2.2'
 DOWNLOAD_URL = (
     'https://github.com/fredericklussier/' + GITHUB_NAME + '/' + VERSION
 )
