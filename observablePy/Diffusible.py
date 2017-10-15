@@ -57,11 +57,6 @@ class Diffusible(object):
         self._diffuse(mode, *args)
 
     def _diffuse(self, mode, *args):
-        state = None
-
-        # if diffusing is not None:
-        #    state = self._buildState()
-
         # Iteration using the diffusing element name.
         #  When None, use all observers
         diffusing = None
@@ -70,12 +65,11 @@ class Diffusible(object):
 
         observers = self.getObserversIterationGenerator(diffusing)
         for observer in observers:
-            observerData, observerType = observer
-
-            actionName = Diffusible.__diffuseActionsMatrix[mode][observerType]
+            type = observer['type']
+            actionName = Diffusible.__diffuseActionsMatrix[mode][type]
             action = getattr(self, actionName)
 
-            action(observerData, *args)
+            action(observer, *args)
 
     def _diffuseElement(self, observer, *args):
         call = observer['call']
@@ -126,7 +120,7 @@ class Diffusible(object):
 
         subValues = {}
         previousSubValues = {}
-        for element in observer["observing"]:
+        for element in observer['observing']:
             subValues[element] = values[element]
             previousSubValues[element] = previousValues[element]
 

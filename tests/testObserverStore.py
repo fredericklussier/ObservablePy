@@ -3,6 +3,7 @@
 
 import unittest
 from observablePy.ObserverStore import ObserverStore
+from observablePy.ObserverTypeEnum import observerTypeEnum
 
 
 class ObserverStoreTests(unittest.TestCase):
@@ -36,7 +37,8 @@ class ObserverStoreTests(unittest.TestCase):
     """
     add
     """
-    def testAdd_ShouldAdd(self):
+
+    def testAdd_UsingSingleElement_ShouldAdd(self):
         # Arrange
         def changeHandle():
             print("Changes")
@@ -47,18 +49,61 @@ class ObserverStoreTests(unittest.TestCase):
         # Assert
         self.assertTrue(self.observers.hasObservers())
         self.assertEqual(
-            self.observers.getObservers(),
-            [{"observing": "voltage", "call": changeHandle}])
+            self.observers._observers,
+            [{"observing": "voltage",
+              "type": observerTypeEnum.element,
+              "call": changeHandle}])
+
+    def testAdd_UsingMultiElements_ShouldAdd(self):
+        # Arrange
+        def changeHandle():
+            print("Changes")
+
+        # Action
+        self.observers.add(["voltage", "level"], changeHandle)
+
+        # Assert
+        self.assertTrue(self.observers.hasObservers())
+        self.assertEqual(
+            self.observers._observers,
+            [{"observing": ["voltage", "level"],
+              "type": observerTypeEnum.listOfElements,
+              "call": changeHandle}])
+
+    def testAdd_UsingAllElements_ShouldAdd(self):
+        # Arrange
+        def changeHandle():
+            print("Changes")
+
+        # Action
+        self.observers.add("*", changeHandle)
+
+        # Assert
+        self.assertTrue(self.observers.hasObservers())
+        self.assertEqual(
+            self.observers._observers,
+            [{"observing": "*",
+              "type": observerTypeEnum.state,
+              "call": changeHandle}])
+
+    def testAdd_UsingUnknowElement_ShouldRaiseError(self):
+        # Arrange
+        def changeHandle():
+            print("Changes")
+
+        # Actionand Assert
+        with self.assertRaises(TypeError):
+            self.observers.add(12, changeHandle)
 
     def testAdd_WhenNotCallable_ShoulRaiseError(self):
         # Arrange
         def changeHandle():
             print("Changes")
-        
+
         # Action and Assert
         with self.assertRaises(TypeError):
             # str is not callable
-            self.observers.add("voltage", "changeHandle")  
+            self.observers.add("voltage", "changeHandle")
 
     """
     remove
@@ -79,8 +124,13 @@ class ObserverStoreTests(unittest.TestCase):
         self.assertTrue(self.observers.hasObservers())
         self.assertEqual(
             self.observers.getObservers(),
-            [{"observing": "voltage", "call": changeHandle},
-            {"observing": "level", "call": changeHandle}])
+            [{
+                "observing": "voltage",
+                "call": changeHandle
+            }, {
+                 "observing": "level",
+                 "call": changeHandle
+            }])
 
     """
     removeAll
@@ -117,9 +167,8 @@ class ObserverStoreTests(unittest.TestCase):
         observers = self.observers.iterationGenerator()
         for observer in observers:
             # Assert
-            observerData, observerType = observer
             self.assertEqual(
-                observerData["observing"],
+                observer["observing"],
                 ["voltage", "level", "plugged"][index])
             index += 1
 

@@ -4,6 +4,7 @@
 import unittest
 from observablePy import Observable
 from observablePy import observable_property
+from observablePy.ObserverTypeEnum import observerTypeEnum
 
 """
 Battery is the class used for testing the Observable
@@ -209,8 +210,11 @@ class ObservableTests(unittest.TestCase):
         actualResult = self.battery.getObservers()
 
         # Assert
-        self.assertEqual(actualResult, [
-            {"observing": "voltage", "call": changeStatehandle}])
+        self.assertEqual(actualResult,
+                         [{
+                            "observing": "voltage",
+                            "call": changeStatehandle
+                         }])
 
     def testGetObservers_WhenNoOne_ShouldGiveObservers(self):
         # Arrange
@@ -263,8 +267,11 @@ class ObservableTests(unittest.TestCase):
         self.battery.observeState(changeStatehandle)
 
         # Assert
-        self.assertEqual(self.battery.getObservers(), [
-            {"observing": "*", "call": changeStatehandle}])
+        self.assertEqual(self.battery.getObservers(),
+                         [{
+                             "observing": "*",
+                             "call": changeStatehandle
+                         }])
 
     def testObserveState_UsingDecorator_ShouldAppendObserver(self):
         # Arrange
@@ -276,8 +283,11 @@ class ObservableTests(unittest.TestCase):
             print("voltageChange")
 
         # Assert
-        self.assertEqual(self.battery.getObservers(), [
-            {"observing": "*", "call": changeStatehandle}])
+        self.assertEqual(self.battery.getObservers(), 
+                         [{
+                             "observing": "*",
+                             "call": changeStatehandle
+                         }])
 
     def testObserveState_WhenObserveLinkToBadFunction_ShouldRaiseValueError(self):
         # Arrange
@@ -305,8 +315,11 @@ class ObservableTests(unittest.TestCase):
         self.battery.observeElement("voltage", voltagehandle)
 
         # Assert
-        self.assertEqual(self.battery.getObservers(), [
-                         {"observing": "voltage", "call": voltagehandle}])
+        self.assertEqual(self.battery.getObservers(), 
+                         [{
+                             "observing": "voltage",
+                             "call": voltagehandle
+                         }])
 
     def testObserveElement_UsingDecorator_ShouldAppendObserver(self):
         # Arrange

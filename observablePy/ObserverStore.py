@@ -5,7 +5,7 @@ from .ObserverTypeEnum import observerTypeEnum
 
 class ObserverStore():
     def __init__(self):
-        self.__observers = []
+        self._observers = []
 
     def add(self, what, call):
 
@@ -16,7 +16,17 @@ class ObserverStore():
                 raise TypeError(
                     '"call" parameter must be a callable function.')
 
-        self.__observers.append({"observing": what, "call": call})
+        type = observerTypeEnum.typeOf(what)
+        if type is observerTypeEnum.unknown:
+            raise TypeError(
+                    "'what' parameter should be a str or " +
+                    " an array of strings. Received '{0}'".format(what))
+
+        self._observers.append(
+                                {"observing": what,
+                                 "type": type,
+                                 "call": call
+                                 })
 
     def remove(self, what, call):
         """
@@ -29,13 +39,18 @@ class ObserverStore():
             - actualValue
 
         """
-        self.__observers.remove({"observing": what, "call": call})
+        type = observerTypeEnum.typeOf(what)
+        self._observers.remove({
+                                    "observing": what,
+                                    "type": type,
+                                    "call": call
+                                 })
 
     def removeAll(self):
         """
         remove all observers
         """
-        del self.__observers[:]
+        del self._observers[:]
 
     def getObservers(self):
         """
@@ -44,7 +59,14 @@ class ObserverStore():
         :return: Subscribed Obversers.
         :rtype: Array
         """
-        return self.__observers
+        result = []
+        for observer in self._observers:
+            result.append(
+                          {
+                              "observing": observer["observing"], 
+                              "call": observer["call"]
+                          })
+        return result
 
     def hasObservers(self):
         """
@@ -53,19 +75,17 @@ class ObserverStore():
         :return: true if it has observer, otherwise false.
         :rtype: bool
         """
-        return self.__observers.__len__() > 0
+        return self._observers.__len__() > 0
 
     def iterationGenerator(self, filter=None):
         if filter is None:
-            obsersers = self.__observers
+            obsersers = self._observers
         else:
             obsersers = self._filter(filter)
 
         for observer in obsersers:
-            type = observerTypeEnum.typeOf(observer["observing"])
-
-            yield observer, type
+            yield observer  # , type
 
     def _filter(self, filter):
-        return ([o for o in self.__observers if (
+        return ([o for o in self._observers if (
                 "*" == o["observing"] or filter in o["observing"])])

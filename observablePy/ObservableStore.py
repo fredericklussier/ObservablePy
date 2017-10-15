@@ -4,7 +4,7 @@
 
 class ObservableStore():
     def __init__(self, observables):
-        self.__observables = observables
+        self._observables = observables
 
     def getObservableElements(self):
         """
@@ -13,7 +13,7 @@ class ObservableStore():
         :return: list of observable properties.
         :rtype: Array
         """
-        return self.__observables
+        return self._observables
 
     def hasObservableElements(self):
         """
@@ -22,7 +22,7 @@ class ObservableStore():
         :return: true if have observable element, otherwise false.
         :rtype: bool
         """
-        return self.__observables.__len__() > 0
+        return self._observables.__len__() > 0
 
     def areObservableElements(self, elementNames):
         """
@@ -59,13 +59,13 @@ class ObservableStore():
 
     def _evaluateString(self, elementNames):
         result = False
-        if (elementNames in self.__observables):
+        if (elementNames in self._observables):
             result = True
         return result
 
     def _evaluateArray(self, elementNames):
         result = False
-        if set(elementNames).issubset(self.__observables):
+        if set(elementNames).issubset(self._observables):
             result = True
         return result
 
@@ -76,8 +76,8 @@ class ObservableStore():
         :param str observableElement: the name of the observable element
         :raises RuntimeError: if element name already exist in the store
         """
-        if observableElement not in self.__observables:
-            self.__observables.append(observableElement)
+        if observableElement not in self._observables:
+            self._observables.append(observableElement)
         else:
             raise RuntimeError(
                 "{0} is already an observable element"
@@ -89,5 +89,5 @@ class ObservableStore():
 
         :param str observableElement: the name of the observable element
         """
-        if observableElement in self.__observables:
-            self.__observables.remove(observableElement)
+        if observableElement in self._observables:
+            self._observables.remove(observableElement)
